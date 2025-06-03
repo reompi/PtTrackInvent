@@ -41,12 +41,10 @@
             this.históricoDeManutençõesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.relatóriosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gerarRelatórioPDFExcelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.históricoDeRelatóriosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.utilizadoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gerirUtilizadoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gerirUtilizadoresToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sairToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,8 +58,7 @@
             this.manutençõesToolStripMenuItem,
             this.relatóriosToolStripMenuItem,
             this.utilizadoresToolStripMenuItem,
-            this.contaToolStripMenuItem,
-            this.sairToolStripMenuItem1});
+            this.contaToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1661, 33);
@@ -80,15 +77,15 @@
             // cadastrarBemToolStripMenuItem
             // 
             this.cadastrarBemToolStripMenuItem.Name = "cadastrarBemToolStripMenuItem";
-            this.cadastrarBemToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.cadastrarBemToolStripMenuItem.Size = new System.Drawing.Size(259, 34);
             this.cadastrarBemToolStripMenuItem.Text = "➕ Cadastrar Bem";
             this.cadastrarBemToolStripMenuItem.Click += new System.EventHandler(this.cadastrarBemToolStripMenuItem_Click);
             // 
             // listarBensToolStripMenuItem
             // 
             this.listarBensToolStripMenuItem.Name = "listarBensToolStripMenuItem";
-            this.listarBensToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.listarBensToolStripMenuItem.Text = "🗃️ Listar Bens";
+            this.listarBensToolStripMenuItem.Size = new System.Drawing.Size(259, 34);
+            this.listarBensToolStripMenuItem.Text = "🗃️ Gerir Bens";
             this.listarBensToolStripMenuItem.Click += new System.EventHandler(this.listarBensToolStripMenuItem_Click);
             // 
             // movimentaçõesToolStripMenuItem
@@ -112,6 +109,7 @@
             this.históricoDeMovimentaçõesToolStripMenuItem.Name = "históricoDeMovimentaçõesToolStripMenuItem";
             this.históricoDeMovimentaçõesToolStripMenuItem.Size = new System.Drawing.Size(371, 34);
             this.históricoDeMovimentaçõesToolStripMenuItem.Text = "📜 Histórico de Movimentações";
+            this.históricoDeMovimentaçõesToolStripMenuItem.Click += new System.EventHandler(this.históricoDeMovimentaçõesToolStripMenuItem_Click);
             // 
             // manutençõesToolStripMenuItem
             // 
@@ -137,8 +135,7 @@
             // relatóriosToolStripMenuItem
             // 
             this.relatóriosToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gerarRelatórioPDFExcelToolStripMenuItem,
-            this.históricoDeRelatóriosToolStripMenuItem});
+            this.gerarRelatórioPDFExcelToolStripMenuItem});
             this.relatóriosToolStripMenuItem.Name = "relatóriosToolStripMenuItem";
             this.relatóriosToolStripMenuItem.Size = new System.Drawing.Size(136, 29);
             this.relatóriosToolStripMenuItem.Text = "📑 Relatórios";
@@ -148,12 +145,7 @@
             this.gerarRelatórioPDFExcelToolStripMenuItem.Name = "gerarRelatórioPDFExcelToolStripMenuItem";
             this.gerarRelatórioPDFExcelToolStripMenuItem.Size = new System.Drawing.Size(343, 34);
             this.gerarRelatórioPDFExcelToolStripMenuItem.Text = "➕ Gerar Relatório PDF/Excel";
-            // 
-            // históricoDeRelatóriosToolStripMenuItem
-            // 
-            this.históricoDeRelatóriosToolStripMenuItem.Name = "históricoDeRelatóriosToolStripMenuItem";
-            this.históricoDeRelatóriosToolStripMenuItem.Size = new System.Drawing.Size(343, 34);
-            this.históricoDeRelatóriosToolStripMenuItem.Text = "🗂️ Histórico de Relatórios";
+            this.gerarRelatórioPDFExcelToolStripMenuItem.Click += new System.EventHandler(this.gerarRelatórioPDFExcelToolStripMenuItem_Click);
             // 
             // utilizadoresToolStripMenuItem
             // 
@@ -186,13 +178,6 @@
             this.contaToolStripMenuItem.Text = "❌ Sair da conta";
             this.contaToolStripMenuItem.Click += new System.EventHandler(this.contaToolStripMenuItem_Click);
             // 
-            // sairToolStripMenuItem1
-            // 
-            this.sairToolStripMenuItem1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.sairToolStripMenuItem1.Name = "sairToolStripMenuItem1";
-            this.sairToolStripMenuItem1.Size = new System.Drawing.Size(192, 29);
-            this.sairToolStripMenuItem1.Text = "📘 Manual de Ajuda";
-            // 
             // TelaPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -202,8 +187,9 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "TelaPrincipal";
-            this.Text = "Ecrã inicial";
+            this.Text = " ";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.TelaPrincipal_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -225,11 +211,9 @@
         private System.Windows.Forms.ToolStripMenuItem históricoDeManutençõesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem relatóriosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gerarRelatórioPDFExcelToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem históricoDeRelatóriosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem utilizadoresToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gerirUtilizadoresToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gerirUtilizadoresToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem contaToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sairToolStripMenuItem1;
     }
 }

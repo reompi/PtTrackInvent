@@ -46,6 +46,18 @@ namespace TrackInvent.BLL
         public static bool Rename(int id, string newNome)
         {
             DAL dal = new DAL();
+
+            // Verifica se já existe outro estado com o mesmo nome (exceto o próprio)
+            SqlParameter[] checkParams = {
+                new SqlParameter("@novoNome", newNome),
+                new SqlParameter("@id", id)
+            };
+            object exists = dal.executarScalar(
+                "SELECT COUNT(*) FROM Estados WHERE Nome = @novoNome AND Id <> @id", checkParams);
+
+            if (Convert.ToInt32(exists) > 0)
+                return false; // Nome já existe em outro estado
+
             SqlParameter[] param = {
                 new SqlParameter("@novoNome", newNome),
                 new SqlParameter("@id", id)
@@ -78,6 +90,17 @@ namespace TrackInvent.BLL
 
             int count = (int)dal.executarScalar("SELECT COUNT(*) FROM Bens_Patrimoniais WHERE Estado_ID = @id", param);
             return count > 0;
+        }
+        public static string GetNomeById(int id)
+        {
+            DAL dal = new DAL();
+            SqlParameter[] sqlParams = {
+                new SqlParameter("@id", id)
+            };
+
+            object result = dal.executarScalar("SELECT Nome FROM Estados WHERE Id = @id", sqlParams);
+
+            return result != null ? result.ToString() : null;
         }
     }
 }

@@ -51,7 +51,7 @@
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "GestaoBens";
-            this.Text = "Bens";
+            this.Text = "Selecione um bem";
             this.Load += new System.EventHandler(this.GestaoBens_Load);
             this.ResumeLayout(false);
 

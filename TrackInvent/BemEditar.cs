@@ -17,11 +17,17 @@ namespace TrackInvent
 
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
         int idBem;
+        int setorID;
         string previousText;
+        bool carregandoSetor = false;
+        bool carregandoEstado = false;
+        bool carregandoCategoria = false;
         public BemEditar(int _idBem)
         {
             InitializeComponent();
             idBem = _idBem;
+            dateTimePicker1.Format = DateTimePickerFormat.Custom;
+            dateTimePicker1.CustomFormat = "dd/MM/yyyy";
         }
 
         private void BemEditar_Load(object sender, EventArgs e)
@@ -32,7 +38,8 @@ namespace TrackInvent
             DataRow row = dt.Rows[0];
             CarregarEstados(Convert.ToInt32(row["Estado_ID"]));
             CarregarCategorias(Convert.ToInt32(row["Categoria_ID"]));
-            CarregarSetores(Convert.ToInt32(row["Localizacao_ID"]));
+            setorID = Convert.ToInt32(row["Localizacao_ID"]);
+            textBox3.Text = Categorias.GetNomeById((setorID));
             textBox2.Text = row["Nome"].ToString();
             textBox4.Text = row["Valor"].ToString();
             textBox5.Text = row["Quantidade"].ToString();
@@ -41,9 +48,9 @@ namespace TrackInvent
             textBox1.Text = row["Icon"].ToString();
             richTextBox1.Text = row["Descricao"].ToString();
         }
-        private void CarregarEstados(int idEstadoSelecionado)
+        private void CarregarEstados(int? idEstadoSelecionado= null)
         {
-
+            carregandoEstado = true;
             DataTable dt = Estados.GetAll();
 
             DataRow novaLinha = dt.NewRow();
@@ -55,12 +62,17 @@ namespace TrackInvent
             comboBox2.ValueMember = "ID";
             comboBox2.DataSource = dt;
 
-            comboBox2.SelectedValue = idEstadoSelecionado;
+            if (idEstadoSelecionado.HasValue)
+            {
+                comboBox2.SelectedValue = idEstadoSelecionado.Value;
+            }
+            else { comboBox2.SelectedIndex = -1; }
+            carregandoEstado = false;
         }
 
-        private void CarregarCategorias(int id)
+        private void CarregarCategorias(int? id = null)
         {
-
+            carregandoCategoria = true;
             DataTable dt = Categorias.GetAll();
 
             DataRow novaLinha = dt.NewRow();
@@ -72,24 +84,15 @@ namespace TrackInvent
             comboBox1.ValueMember = "ID";
             comboBox1.DataSource = dt;
 
-            comboBox1.SelectedValue = id;
+
+            if (id.HasValue)
+            {
+                comboBox1.SelectedValue = id.Value;
+            }
+            else { comboBox1.SelectedIndex = -1; }
+            carregandoCategoria = false;
         }
-        private void CarregarSetores(int id)
-        {
 
-            DataTable dt = Setores.GetAll();
-
-            DataRow novaLinha = dt.NewRow();
-            novaLinha["ID"] = -1;
-            novaLinha["Nome"] = "Adicionar outro/Editar";
-            dt.Rows.InsertAt(novaLinha, 0);
-
-            comboBox3.DisplayMember = "Nome";
-            comboBox3.ValueMember = "ID";
-            comboBox3.DataSource = dt;
-
-            comboBox3.SelectedValue = id;
-        }
         private void button2_Click(object sender, EventArgs e)
         {
             // Validação simples (pode ser expandida conforme necessário)
@@ -109,7 +112,6 @@ namespace TrackInvent
             decimal.TryParse(textBox5.Text, out quantidade);
             DateTime dataAquisicao = dateTimePicker1.Value;
             int estadoID = (comboBox2.SelectedValue != null) ? Convert.ToInt32(comboBox2.SelectedValue) : -1;
-            int setorID = (comboBox3.SelectedValue != null) ? Convert.ToInt32(comboBox3.SelectedValue) : -1;
             string icone = textBox1.Text;
 
             // Chamar método de atualização
@@ -192,6 +194,59 @@ namespace TrackInvent
                 // Update previousText only if within limit
                 previousText = textBox1.Text;
             }
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (carregandoEstado)
+                return;  // Ignorar enquanto carrega
+            if (comboBox2.SelectedItem == null)
+                return;  // Nada selecionado, ignora
+
+            DataRowView row = comboBox2.SelectedItem as DataRowView;
+            if (row != null)
+            {
+                string selected = row["Nome"].ToString();
+
+                if (selected == "Adicionar outro/Editar")
+                {
+                    EstadoEditorForm fe = new EstadoEditorForm();
+                    fe.ShowDialog();
+
+                    // Recarregar e resetar seleção
+                    CarregarEstados();
+                }
+            }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (carregandoCategoria)
+                return;  // Ignorar enquanto carrega
+            if (comboBox1.SelectedIndex == -1 || comboBox1.SelectedItem == null)
+                return;  // Nada selecionado, ignora
+
+            DataRowView row = comboBox1.SelectedItem as DataRowView;
+            if (row != null)
+            {
+                string selected = row["Nome"].ToString();
+
+                if (selected == "Adicionar outro/Editar")
+                {
+                    CategoriaEditorForm fe = new CategoriaEditorForm();
+                    fe.ShowDialog();
+
+                    // Recarregar e resetar seleção
+                    CarregarCategorias();
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Permissoes permissoes = new Permissoes(idBem);
+            permissoes.ShowDialog();
+
         }
     }
     }

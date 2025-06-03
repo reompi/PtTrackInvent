@@ -7,18 +7,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TrackInvent.BLL;
 
 namespace TrackInvent
 {
     public partial class GestaoBens : Form
     {
-        public GestaoBens()
+        string destino;
+        DataTable loadBens;
+        DataTable filtro;
+        string pesquisa;
+        int? categoriaId;
+        int? estadoId;
+        int? setorId;
+        public GestaoBens(string _destino ="")
         {
+            destino = _destino;
             InitializeComponent();
-            LoadBens(BLL.Bens.GetAll());
+            if (SessaoAtual.Cargo == "Utilizador" && _destino != "movimentacaoHistorico")
+            {
+                 loadBens = BLL.Bens.GetAll(SessaoAtual.Id);
+                filtro = BLL.Bens.GetByFiltro(pesquisa, categoriaId, estadoId, setorId, SessaoAtual.Id);
+            }
+            else {
+                loadBens = BLL.Bens.GetAll();
+                filtro=BLL.Bens.GetByFiltro(pesquisa, categoriaId, estadoId, setorId);
+            }
+                LoadBens(loadBens);
             CarregarFiltros();
-
         }
+        // Em métodos de evento de UI do Windows Forms, como BtnIcon_Click, não é possível retornar valores diretamente.
+        // O método deve ser 'void' e não pode retornar valores como 'return bemID;'.
+        // Para passar valores de volta ao chamador, use propriedades públicas, eventos ou variáveis de instância.
+        // Exemplo de abordagem correta:
+
+        // 1. Defina uma propriedade pública para armazenar o ID selecionado:
+        public int? BemSelecionadoId { get; private set; }
         private void LoadBens(DataTable dtBens)
         {
             panel1.Controls.Clear();
@@ -96,12 +120,25 @@ namespace TrackInvent
         {
             Button btn = sender as Button;
             int bemID = (int)btn.Tag;
+            if (destino == "movimentacao")
+            {
+                var formMovimentacao = new BensMovimentação(bemID);
+                formMovimentacao.ShowDialog();
+                return;
+            }
+            else if (destino == "movimentacaoHistorico")
+                {
+                    this.BemSelecionadoId = bemID;
+                    this.Close();
+                    return;
+                }
+            else {
+                var formDetalhes = new BemEditar(bemID);
+                formDetalhes.ShowDialog();
+            }
 
-            // Exemplo: abrir formulário de detalhes
-            var formDetalhes = new BemEditar(bemID);
-            formDetalhes.ShowDialog();
 
-            LoadBens(BLL.Bens.GetAll()); // Recarrega caso tenha havido alteração
+            LoadBens(loadBens); // Recarrega caso tenha havido alteração
         }
 
         private Panel panelFiltros;
@@ -256,19 +293,15 @@ namespace TrackInvent
 
         private void AtualizarFiltros()
         {
-            string pesquisa = isPlaceholderTxt ? "" : txtPesquisa.Text.Trim();
-            int? categoriaId = isPlaceholderCbCategoria ? (int?)null : BLL.Categorias.GetIDByNome(cbCategoria.Text);
+             pesquisa = isPlaceholderTxt ? "" : txtPesquisa.Text.Trim();
+            categoriaId = isPlaceholderCbCategoria ? (int?)null : BLL.Categorias.GetIDByNome(cbCategoria.Text);
  ;
 
-            int? estadoId = isPlaceholderCbEstado ? (int?)null : BLL.Estados.GetIDByNome(cbEstado.Text);
+            estadoId = isPlaceholderCbEstado ? (int?)null : BLL.Estados.GetIDByNome(cbEstado.Text);
  ;
-            int? setorId = isPlaceholderCbSetor ? (int?)null : BLL.Setores.GetIDByNome(cbSetor.Text); ;
+           setorId = isPlaceholderCbSetor ? (int?)null : BLL.Setores.GetIDByNome(cbSetor.Text); ;
 
-
-            // Chamada ao BLL com filtros
-            DataTable dtBens = BLL.Bens.GetByFiltro(pesquisa, categoriaId, estadoId, setorId);
-
-            LoadBens(dtBens); // Este é o método que monta os cards
+            LoadBens(filtro); // Este é o método que monta os cards
         }
 
     }

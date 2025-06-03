@@ -78,7 +78,7 @@ namespace TrackInvent
             }
             else
             {
-                MessageBox.Show("Erro ao renomear. Estado pode estar em uso.");
+                MessageBox.Show("Erro ao renomear. Nome já está em uso");
             }
         }
 

@@ -37,7 +37,7 @@ namespace TrackInvent
 
             if (Categorias.Add(novo))
             {
-                MessageBox.Show("Estado adicionado.");
+                MessageBox.Show("Categoria adicionada.");
                 textBox1.Clear();
                 CarregarCategorias();
             }
@@ -51,7 +51,7 @@ namespace TrackInvent
         {
             if (listBox1.SelectedItem == null)
             {
-                MessageBox.Show("Selecione um estado para renomear.");
+                MessageBox.Show("Selecione uma categoria para renomear.");
                 return;
             }
 
@@ -66,13 +66,13 @@ namespace TrackInvent
 
             if (Categorias.Rename(idAntigo, novo))
             {
-                MessageBox.Show("Estado renomeado.");
+                MessageBox.Show("Catgoria renomeada.");
                 textBox1.Clear();
                 CarregarCategorias();
             }
             else
             {
-                MessageBox.Show("Erro ao renomear. Estado pode estar em uso.");
+                MessageBox.Show("Erro ao renomear. Nome já está em uso.");
             }
         }
 
@@ -80,24 +80,34 @@ namespace TrackInvent
         {
             if (listBox1.SelectedItem == null)
             {
-                MessageBox.Show("Selecione um estado para eliminar.");
+                MessageBox.Show("Selecione uma categoria para eliminar.");
                 return;
             }
 
-            var confirm = MessageBox.Show("Deseja mesmo eliminar este estado?", "Confirmar", MessageBoxButtons.YesNo);
+            var confirm = MessageBox.Show("Deseja mesmo eliminar esta categoria?", "Confirmar", MessageBoxButtons.YesNo);
             if (confirm == DialogResult.Yes)
             {
                 int id = Categorias.GetIDByNome(listBox1.SelectedValue.ToString());
                 if (Categorias.Delete(id))
                 {
-                    MessageBox.Show("Estado eliminado.");
+                    MessageBox.Show("Categoria eliminado.");
                     CarregarCategorias();
                 }
                 else
                 {
-                    MessageBox.Show("Erro ao eliminar. Estado pode estar em uso.");
+                    MessageBox.Show("Erro ao eliminar. Categoria pode estar em uso.");
                 }
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

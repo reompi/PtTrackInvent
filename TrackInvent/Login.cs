@@ -21,12 +21,21 @@ namespace TrackInvent
         {
             string nome = textBox1.Text.Trim();
             string password = textBox2.Text.Trim();
-            bool login = Utilizadores.queryLogin(nome, password);
-            if (login) {
+            var loginResult = Utilizadores.queryLogin(nome, password);
+
+            if (loginResult != null && loginResult.Success)
+            {
+                // Define os dados do utilizador logado na sessão global
+                SessaoAtual.Id = loginResult.Id;
+                SessaoAtual.Nome = loginResult.Nome;
+                SessaoAtual.Cargo = loginResult.Cargo;
+
                 TelaPrincipal mainForm = new TelaPrincipal();
                 mainForm.Show();
-                this.Hide(); // Hide the login form
-            } else {
+                this.Hide();
+            }
+            else
+            {
                 MessageBox.Show("Login falhou!");
             }
         }

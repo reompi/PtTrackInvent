@@ -48,11 +48,23 @@ namespace TrackInvent.BLL
         public static bool Update(int id, string nome)
         {
             DAL dal = new DAL();
+
+            // Verifica se já existe outro setor com o mesmo nome (exceto o próprio)
+            SqlParameter[] checkParams = {
+                new SqlParameter("@nome", nome),
+                new SqlParameter("@id", id)
+            };
+            object exists = dal.executarScalar(
+                "SELECT COUNT(*) FROM Setores WHERE Nome = @nome AND ID <> @id", checkParams);
+
+            if (Convert.ToInt32(exists) > 0)
+                return false; // Nome já existe em outro setor
+
             SqlParameter[] sqlParams = {
                 new SqlParameter("@id", id),
                 new SqlParameter("@nome", nome),
             };
-          
+
             int rows = dal.executarNonQuery("UPDATE Setores SET Nome = @nome WHERE ID = @id", sqlParams);
             return rows > 0;
         }

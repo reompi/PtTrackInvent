@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using TrackInvent.BLL;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace TrackInvent
 {
@@ -29,6 +30,8 @@ namespace TrackInvent
             CarregarEstados();
             CarregarCategorias();
             CarregarSetores();  
+            dateTimePicker1.Format = DateTimePickerFormat.Custom;
+            dateTimePicker1.CustomFormat = "dd/MM/yyyy";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -205,7 +208,7 @@ dt.Rows.InsertAt(novaLinha, 0); // Add to the top of the list
             }
 
             // Validar Estado
-            if (comboBox2.SelectedValue == null || comboBox2.SelectedValue.ToString().Contains("Adicionar"))
+            if (comboBox2.SelectedValue == null)
             {
                 MessageBox.Show("Por favor, selecione um estado válido.");
                 return;
@@ -213,7 +216,7 @@ dt.Rows.InsertAt(novaLinha, 0); // Add to the top of the list
             int estado = BLL.Estados.GetIDByNome(comboBox2.SelectedValue.ToString());
 
             // Validar Setor
-            if (comboBox3.SelectedValue == null || comboBox3.SelectedValue.ToString().Contains("Adicionar"))
+            if (comboBox3.SelectedValue == null)
             {
                 MessageBox.Show("Por favor, selecione um setor válido.");
                 return;
@@ -228,11 +231,15 @@ dt.Rows.InsertAt(novaLinha, 0); // Add to the top of the list
             string descricao = string.IsNullOrWhiteSpace(richTextBox1.Text) ? null : richTextBox1.Text;
 
             // Gravar no banco de dados
-            bool sucesso = BLL.Bens.CriarBem(nome, descricao, categoria, valor, quantidade, dataAquisicao, estado, setor, icon);
+            int bemId = BLL.Bens.CriarBem(nome, descricao, categoria, valor, quantidade, dataAquisicao, estado, setor, icon);
 
-            if (sucesso)
+            if (bemId > 0)
             {
                 MessageBox.Show("Bem cadastrado com sucesso!");
+                if (SessaoAtual.Cargo == "Utilizador")
+                {
+                    BLL.BensUtilizadores.AdicionarPermissao(bemId, SessaoAtual.Id);
+                }
             }
             else
             {
@@ -331,6 +338,15 @@ dt.Rows.InsertAt(novaLinha, 0); // Add to the top of the list
                 e.SuppressKeyPress = true;
                 e.Handled = true;
             }
+        }
+
+        private void CadastroBens_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
         }
     }
 }

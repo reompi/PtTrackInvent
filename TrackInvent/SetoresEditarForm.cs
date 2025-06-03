@@ -37,7 +37,7 @@ namespace TrackInvent
 
             if (Setores.Add(novo))
             {
-                MessageBox.Show("Estado adicionado.");
+                MessageBox.Show("Setor adicionado.");
                 textBox1.Clear();
                 CarregarSetores();
             }
@@ -51,7 +51,7 @@ namespace TrackInvent
         {
             if (listBox1.SelectedItem == null)
             {
-                MessageBox.Show("Selecione um estado para renomear.");
+                MessageBox.Show("Selecione um setor para renomear.");
                 return;
             }
 
@@ -66,13 +66,13 @@ namespace TrackInvent
 
             if (Setores.Update(idAntigo, novo))
             {
-                MessageBox.Show("Estado renomeado.");
+                MessageBox.Show("Setor renomeado.");
                 textBox1.Clear();
                 CarregarSetores();
             }
             else
             {
-                MessageBox.Show("Erro ao renomear. Estado pode estar em uso.");
+                MessageBox.Show("Erro ao renomear. Nome já está em uso.");
             }
         }
 
@@ -80,22 +80,22 @@ namespace TrackInvent
         {
             if (listBox1.SelectedItem == null)
             {
-                MessageBox.Show("Selecione um estado para eliminar.");
+                MessageBox.Show("Selecione um setor para eliminar.");
                 return;
             }
 
-            var confirm = MessageBox.Show("Deseja mesmo eliminar este estado?", "Confirmar", MessageBoxButtons.YesNo);
+            var confirm = MessageBox.Show("Deseja mesmo eliminar este setor?", "Confirmar", MessageBoxButtons.YesNo);
             if (confirm == DialogResult.Yes)
             {
                 int id = Setores.GetIDByNome(listBox1.SelectedValue.ToString());
                 if (Setores.Delete(id))
                 {
-                    MessageBox.Show("Estado eliminado.");
+                    MessageBox.Show("Setor eliminado.");
                     CarregarSetores();
                 }
                 else
                 {
-                    MessageBox.Show("Erro ao eliminar. Estado pode estar em uso.");
+                    MessageBox.Show("Erro ao eliminar. Setor pode estar em uso.");
                 }
             }
         }

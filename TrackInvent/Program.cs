@@ -16,7 +16,7 @@ namespace TrackInvent
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Relatório()); // Open the Login form
+            Application.Run(new Login()); // Open the Login form
         }
     }
 }

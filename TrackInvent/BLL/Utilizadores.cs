@@ -3,32 +3,45 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using TrackInvent;
 
 public class Utilizadores
 {
-    static public bool queryLogin(string username, string password)
+    public static DataTable GetTodosAtivos()
+    {
+        DAL dal = new DAL();
+        return dal.executarReader("SELECT * FROM Utilizadores Where Cargo = 'Utilizador'");
+    }
+    static public LoginResult queryLogin(string username, string password)
     {
         DAL dal = new DAL();
 
-        // Buscar apenas o hash da senha pelo username
-        SqlParameter[] sqlParams = new SqlParameter[]{
-            new SqlParameter("@username", username)
-        };
+        SqlParameter[] sqlParams = new SqlParameter[] {
+        new SqlParameter("@username", username)
+    };
 
-        DataTable dt = dal.executarReader("SELECT Senha_Hash FROM Utilizadores WHERE Nome_De_Utilizador=@username AND Archived = 0", sqlParams);
+        DataTable dt = dal.executarReader(
+            "SELECT Id, Nome, Cargo, Senha_Hash FROM Utilizadores WHERE Nome_De_Utilizador=@username AND Archived = 0",
+            sqlParams
+        );
 
         if (dt.Rows.Count == 1)
         {
             string storedHash = dt.Rows[0]["Senha_Hash"].ToString();
 
-            // Verificar se a senha digitada corresponde ao hash armazenado
             if (AuthHelper.VerifyPassword(password, storedHash))
             {
-                return true; // Login bem-sucedido
+                return new LoginResult
+                {
+                    Success = true,
+                    Id = Convert.ToInt32(dt.Rows[0]["Id"]),
+                    Nome = dt.Rows[0]["Nome"].ToString(),
+                    Cargo = dt.Rows[0]["Cargo"].ToString()
+                };
             }
         }
 
-        return false; // Login falhou
+        return new LoginResult { Success = false };
     }
     static public bool queryRegister(string nome, string username, string password, string cargo)
     {
@@ -76,6 +89,28 @@ public class Utilizadores
             MessageBox.Show("Erro: " + ex.Message);
             return false; // Falha na inserção
         }
+    }
+    public static int? GetIdByNome(string nome)
+    {
+        DAL dal = new DAL();
+
+        SqlParameter[] sqlParams = new SqlParameter[]
+        {
+            new SqlParameter("@nome", nome)
+        };
+
+        DataTable dt = dal.executarReader(
+            "SELECT Id FROM Utilizadores WHERE Nome = @nome AND Archived = 0",
+            sqlParams
+        );
+
+        if (dt.Rows.Count == 1)
+        {
+            return Convert.ToInt32(dt.Rows[0]["Id"]);
+        }
+
+        // Retorna null se não encontrar ou se houver duplicidade
+        return null;
     }
 
 }
