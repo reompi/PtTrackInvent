@@ -15,25 +15,23 @@ namespace TrackInvent
     {
         string destino;
         DataTable loadBens;
-        DataTable filtro;
         string pesquisa;
         int? categoriaId;
         int? estadoId;
         int? setorId;
-        public GestaoBens(string _destino ="")
+        public GestaoBens(string _destino = "")
         {
             destino = _destino;
             InitializeComponent();
             if (SessaoAtual.Cargo == "Utilizador" && _destino != "movimentacaoHistorico")
             {
-                 loadBens = BLL.Bens.GetAll(SessaoAtual.Id);
-                filtro = BLL.Bens.GetByFiltro(pesquisa, categoriaId, estadoId, setorId, SessaoAtual.Id);
+                loadBens = BLL.Bens.GetAll(SessaoAtual.Id);
             }
-            else {
+            else
+            {
                 loadBens = BLL.Bens.GetAll();
-                filtro=BLL.Bens.GetByFiltro(pesquisa, categoriaId, estadoId, setorId);
             }
-                LoadBens(loadBens);
+            LoadBens(loadBens);
             CarregarFiltros();
         }
         // Em métodos de evento de UI do Windows Forms, como BtnIcon_Click, não é possível retornar valores diretamente.
@@ -58,7 +56,7 @@ namespace TrackInvent
                 DataRow row = dtBens.Rows[i];
                 string nome = row["Nome"].ToString();
                 string icon = row["Icon"]?.ToString() ?? "";
-                    string quantidade = row["Quantidade"].ToString();
+                string quantidade = row["Quantidade"].ToString();
                 string valor = row["Valor"].ToString();
 
                 int col = i % columns;
@@ -70,7 +68,7 @@ namespace TrackInvent
                 // Botão com imagem
                 Button btn = new Button();
                 btn.Width = cardWidth;
-                btn.Height = cardHeight-60;
+                btn.Height = cardHeight - 60;
                 btn.Location = new Point(0, 0);
                 btn.BackgroundImageLayout = ImageLayout.Zoom;
                 btn.FlatStyle = FlatStyle.Flat;
@@ -78,7 +76,7 @@ namespace TrackInvent
                 btn.Font = new Font("Calibri", 24F, FontStyle.Regular);
                 btn.Text = icon;
                 btn.Tag = row["ID"];
-                btn.Click += BtnIcon_Click; 
+                btn.Click += BtnIcon_Click;
 
                 // Label nome
                 Label lblNome = new Label();
@@ -127,16 +125,16 @@ namespace TrackInvent
                 return;
             }
             else if (destino == "movimentacaoHistorico")
-                {
-                    this.BemSelecionadoId = bemID;
-                    this.Close();
-                    return;
-                }
-            else {
+            {
+                this.BemSelecionadoId = bemID;
+                this.Close();
+                return;
+            }
+            else
+            {
                 var formDetalhes = new BemEditar(bemID);
                 formDetalhes.ShowDialog();
             }
-
 
             LoadBens(loadBens); // Recarrega caso tenha havido alteração
         }
@@ -181,18 +179,19 @@ namespace TrackInvent
                     txtPesquisa.ForeColor = Color.Gray;
                 }
             };
-              txtPesquisa.TextChanged += (s, e) =>
-              {
+            txtPesquisa.TextChanged += (s, e) =>
+            {
                 if (isPlaceholderTxt == false)
                     AtualizarFiltros();
-              };
+            };
             txtPesquisa.Location = new Point(10, 15);
             txtPesquisa.Width = 150;
             panelFiltros.Controls.Add(txtPesquisa);
 
             // ComboBox Categoria
-            cbCategoria = CriarComboComVazio(BLL.Categorias.GetAll(), "Nome", new Point(180, 15),"Categoria");
-            cbCategoria.SelectedIndexChanged += (s, e) => {
+            cbCategoria = CriarComboComVazio(BLL.Categorias.GetAll(), "Nome", new Point(180, 15), "Categoria");
+            cbCategoria.SelectedIndexChanged += (s, e) =>
+            {
                 if (cbCategoria.SelectedIndex == 0) // Se for o placeholder
                 {
                     isPlaceholderCbCategoria = true;
@@ -201,11 +200,12 @@ namespace TrackInvent
                 {
                     isPlaceholderCbCategoria = false;
                 }
-                AtualizarFiltros(); };
+                AtualizarFiltros();
+            };
             panelFiltros.Controls.Add(cbCategoria);
 
             // ComboBox Estado
-            cbEstado = CriarComboComVazio(BLL.Estados.GetAll(), "Nome", new Point(330, 15),"Estado");
+            cbEstado = CriarComboComVazio(BLL.Estados.GetAll(), "Nome", new Point(330, 15), "Estado");
             cbEstado.SelectedIndexChanged += (s, e) =>
             {
                 if (cbEstado.SelectedIndex == 0) // Se for o placeholder
@@ -217,12 +217,13 @@ namespace TrackInvent
                     isPlaceholderCbEstado = false;
                 }
                 AtualizarFiltros();
-            }; 
+            };
             panelFiltros.Controls.Add(cbEstado);
 
             // ComboBox Setor
             cbSetor = CriarComboComVazio(BLL.Setores.GetAll(), "Nome", new Point(480, 15), "Setor");
-            cbSetor.SelectedIndexChanged += (s, e) => {
+            cbSetor.SelectedIndexChanged += (s, e) =>
+            {
                 if (cbSetor.SelectedIndex == 0) // Se for o placeholder
                 {
                     isPlaceholderCbSetor = true;
@@ -231,7 +232,8 @@ namespace TrackInvent
                 {
                     isPlaceholderCbSetor = false;
                 }
-                AtualizarFiltros(); };
+                AtualizarFiltros();
+            };
             panelFiltros.Controls.Add(cbSetor);
         }
 
@@ -290,19 +292,24 @@ namespace TrackInvent
             return cb;
         }
 
-
         private void AtualizarFiltros()
         {
-             pesquisa = isPlaceholderTxt ? "" : txtPesquisa.Text.Trim();
+            pesquisa = isPlaceholderTxt ? "" : txtPesquisa.Text.Trim();
             categoriaId = isPlaceholderCbCategoria ? (int?)null : BLL.Categorias.GetIDByNome(cbCategoria.Text);
- ;
-
             estadoId = isPlaceholderCbEstado ? (int?)null : BLL.Estados.GetIDByNome(cbEstado.Text);
- ;
-           setorId = isPlaceholderCbSetor ? (int?)null : BLL.Setores.GetIDByNome(cbSetor.Text); ;
+            setorId = isPlaceholderCbSetor ? (int?)null : BLL.Setores.GetIDByNome(cbSetor.Text);
 
-            LoadBens(filtro); // Este é o método que monta os cards
+            // Chamar sempre o BLL para obter dados atualizados conforme os filtros atuais
+            DataTable dadosFiltrados;
+            if (SessaoAtual.Cargo == "Utilizador" && destino != "movimentacaoHistorico")
+            {
+                dadosFiltrados = BLL.Bens.GetByFiltro(pesquisa, categoriaId, estadoId, setorId, SessaoAtual.Id);
+            }
+            else
+            {
+                dadosFiltrados = BLL.Bens.GetByFiltro(pesquisa, categoriaId, estadoId, setorId);
+            }
+            LoadBens(dadosFiltrados); // Monta os cards com dados atualizados
         }
-
     }
 }
