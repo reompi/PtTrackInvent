@@ -11,6 +11,47 @@ namespace TrackInvent.BLL
 {
     internal class Bens
     {
+        public static DataTable Filtrar(int? categoriaId, int? estadoId, int? setorId, DateTime dataInicio, DateTime dataFim)
+        {
+            List<SqlParameter> parametros = new List<SqlParameter>
+    {
+        new SqlParameter("@DataInicio", dataInicio),
+        new SqlParameter("@DataFim", dataFim)
+    };
+
+            string query = @"
+        SELECT B.Nome, C.Nome AS Categoria, E.Nome AS Estado, S.Nome AS Setor,
+               B.Valor, B.Quantidade, B.Data_Aquisicao,
+               (B.Valor * B.Quantidade) AS Total
+        FROM Bens_Patrimoniais B
+        JOIN Categorias C ON B.Categoria_ID = C.ID
+        JOIN Estados E ON B.Estado_ID = E.ID
+        JOIN Setores S ON B.Localizacao_ID = S.ID
+        WHERE B.Data_Aquisicao BETWEEN @DataInicio AND @DataFim
+    ";
+
+            if (categoriaId != null)
+            {
+                query += " AND B.Categoria_ID = @Categoria";
+                parametros.Add(new SqlParameter("@Categoria", categoriaId));
+            }
+
+            if (estadoId != null)
+            {
+                query += " AND B.Estado_ID = @Estado";
+                parametros.Add(new SqlParameter("@Estado", estadoId));
+            }
+
+            if (setorId != null)
+            {
+                query += " AND B.Localizacao_ID = @Setor";
+                parametros.Add(new SqlParameter("@Setor", setorId));
+            }
+
+            DAL dal = new DAL();
+            return dal.executarReader(query, parametros.ToArray());
+        }
+
         public static bool CriarBem(string nome, string descricao, int categoriaID, decimal valor, decimal quantidade, DateTime dataAquisicao, int estadoID, int setorID, string icone)
         {
             DAL dal = new DAL();
@@ -74,7 +115,44 @@ namespace TrackInvent.BLL
 
             return dal.executarReader(query, parametros.ToArray());
         }
+        public static DataTable GetById(int bemId)
+        {
+            DAL dal = new DAL();
+            string query = "SELECT * FROM Bens_Patrimoniais WHERE ID = @id";
+            SqlParameter[] parametros = { new SqlParameter("@id", bemId) };
+            return dal.executarReader(query, parametros);
+        }
+        public static bool AtualizarBem(int id, string nome, string descricao, int categoriaID, decimal valor, decimal quantidade, DateTime dataAquisicao, int estadoID, int setorID, string icone)
+        {
+            DAL dal = new DAL();
+            SqlParameter[] sqlParams = {
+                new SqlParameter("@ID", id),
+                new SqlParameter("@Nome", nome),
+                new SqlParameter("@Descricao", (object)descricao ?? DBNull.Value),
+                new SqlParameter("@Categoria_ID", categoriaID),
+                new SqlParameter("@Valor", valor),
+                new SqlParameter("@Quantidade", quantidade),
+                new SqlParameter("@Data_Aquisicao", dataAquisicao),
+                new SqlParameter("@Estado_ID", estadoID),
+                new SqlParameter("@Setor_ID", setorID),
+                new SqlParameter("@Icone", (object)icone ?? DBNull.Value)
+            };
 
+            int rows = dal.executarNonQuery(@"
+                UPDATE Bens_Patrimoniais
+                SET Nome = @Nome,
+                    Descricao = @Descricao,
+                    Categoria_ID = @Categoria_ID,
+                    Valor = @Valor,
+                    Quantidade = @Quantidade,
+                    Data_Aquisicao = @Data_Aquisicao,
+                    Estado_ID = @Estado_ID,
+                    Localizacao_ID = @Setor_ID,
+                    Icon = @Icone
+                WHERE ID = @ID", sqlParams);
+
+            return rows > 0;
+        }
 
     }
 

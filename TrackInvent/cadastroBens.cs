@@ -12,7 +12,7 @@ using TrackInvent.BLL;
 
 namespace TrackInvent
 {
-    public partial class cadastroBens : Form
+    public partial class CadastroBens : Form
     {
         [DllImport("user32.dll")]
 
@@ -23,7 +23,7 @@ namespace TrackInvent
         const byte VK_OEM_PERIOD = 0xBE;
         string previousText;
 
-        public cadastroBens()
+        public CadastroBens()
         {
             InitializeComponent();
             CarregarEstados();
@@ -114,9 +114,11 @@ namespace TrackInvent
 
             DataTable dt = Estados.GetAll();
 
-            DataRow novaLinha = dt.NewRow();
-            novaLinha["Nome"] = "Adicionar outro/Editar";
-            dt.Rows.Add(novaLinha);
+         DataRow novaLinha = dt.NewRow();
+novaLinha["ID"] = -1; // Or another unique negative value
+novaLinha["Nome"] = "Adicionar outro/Editar";
+dt.Rows.InsertAt(novaLinha, 0); // Add to the top of the list
+
 
             comboBox2.DataSource = dt;
             comboBox2.DisplayMember = "Nome";
@@ -223,7 +225,7 @@ namespace TrackInvent
 
             // Icone e Descrição
             string icon = string.IsNullOrWhiteSpace(textBox1.Text) ? null : textBox1.Text.Trim();
-            string descricao = string.IsNullOrWhiteSpace(richTextBox1.Text) ? null : richTextBox1.Text.Trim();
+            string descricao = string.IsNullOrWhiteSpace(richTextBox1.Text) ? null : richTextBox1.Text;
 
             // Gravar no banco de dados
             bool sucesso = BLL.Bens.CriarBem(nome, descricao, categoria, valor, quantidade, dataAquisicao, estado, setor, icon);

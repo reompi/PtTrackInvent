@@ -32,14 +32,9 @@ namespace TrackInvent
 
         private void gerirUtilizadoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-          
-            Registro formRegistro = new Registro
-            {
-                MdiParent = this 
-            };
-
+            Registro formRegistro = new Registro();
+            formRegistro.MdiParent = this;
             formRegistro.Show();
-
         }
 
         private void contaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -69,13 +64,16 @@ namespace TrackInvent
 
         private void cadastrarBemToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            cadastroBens cadastroBens = new cadastroBens
-            {
-                MdiParent = this
-            };
-
-
+            CadastroBens cadastroBens = new CadastroBens();
+                cadastroBens.MdiParent = this;
             cadastroBens.Show();
+        }
+
+        private void listarBensToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GestaoBens gestaoBens = new GestaoBens();
+            gestaoBens.MdiParent = this;
+            gestaoBens.Show();
         }
     }
 }

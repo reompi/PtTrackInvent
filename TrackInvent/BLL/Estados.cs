@@ -10,7 +10,7 @@ namespace TrackInvent.BLL
         public static DataTable GetAll()
         {
             DAL dal = new DAL();
-            return dal.executarReader("SELECT Nome FROM Estados ORDER BY Nome");
+            return dal.executarReader("SELECT Nome,Id FROM Estados ORDER BY Nome");
         }
         public static int GetIDByNome(string nome)
         {

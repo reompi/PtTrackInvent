@@ -33,9 +33,6 @@
             this.bensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cadastrarBemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listarBensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gerirSetoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cadastrarBemToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.movimentaçõesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.novaMovimentaçãoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.históricoDeMovimentaçõesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,7 +56,6 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.bensToolStripMenuItem,
-            this.setoresToolStripMenuItem,
             this.movimentaçõesToolStripMenuItem,
             this.manutençõesToolStripMenuItem,
             this.relatóriosToolStripMenuItem,
@@ -84,39 +80,16 @@
             // cadastrarBemToolStripMenuItem
             // 
             this.cadastrarBemToolStripMenuItem.Name = "cadastrarBemToolStripMenuItem";
-            this.cadastrarBemToolStripMenuItem.Size = new System.Drawing.Size(259, 34);
+            this.cadastrarBemToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.cadastrarBemToolStripMenuItem.Text = "➕ Cadastrar Bem";
             this.cadastrarBemToolStripMenuItem.Click += new System.EventHandler(this.cadastrarBemToolStripMenuItem_Click);
             // 
             // listarBensToolStripMenuItem
             // 
             this.listarBensToolStripMenuItem.Name = "listarBensToolStripMenuItem";
-            this.listarBensToolStripMenuItem.Size = new System.Drawing.Size(259, 34);
+            this.listarBensToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.listarBensToolStripMenuItem.Text = "🗃️ Listar Bens";
-            // 
-            // setoresToolStripMenuItem
-            // 
-            this.setoresToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gerirSetoresToolStripMenuItem,
-            this.cadastrarBemToolStripMenuItem1});
-            this.setoresToolStripMenuItem.Name = "setoresToolStripMenuItem";
-            this.setoresToolStripMenuItem.Size = new System.Drawing.Size(117, 29);
-            this.setoresToolStripMenuItem.Text = "🏢 Setores";
-            this.setoresToolStripMenuItem.Click += new System.EventHandler(this.setoresToolStripMenuItem_Click);
-            // 
-            // gerirSetoresToolStripMenuItem
-            // 
-            this.gerirSetoresToolStripMenuItem.Name = "gerirSetoresToolStripMenuItem";
-            this.gerirSetoresToolStripMenuItem.Size = new System.Drawing.Size(266, 34);
-            this.gerirSetoresToolStripMenuItem.Text = "➕ Cadastrar Setor";
-            this.gerirSetoresToolStripMenuItem.Click += new System.EventHandler(this.gerirSetoresToolStripMenuItem_Click);
-            // 
-            // cadastrarBemToolStripMenuItem1
-            // 
-            this.cadastrarBemToolStripMenuItem1.Name = "cadastrarBemToolStripMenuItem1";
-            this.cadastrarBemToolStripMenuItem1.Size = new System.Drawing.Size(266, 34);
-            this.cadastrarBemToolStripMenuItem1.Text = "📜 Gerir Setores";
-            this.cadastrarBemToolStripMenuItem1.Click += new System.EventHandler(this.cadastrarBemToolStripMenuItem1_Click);
+            this.listarBensToolStripMenuItem.Click += new System.EventHandler(this.listarBensToolStripMenuItem_Click);
             // 
             // movimentaçõesToolStripMenuItem
             // 
@@ -244,9 +217,6 @@
         private System.Windows.Forms.ToolStripMenuItem bensToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cadastrarBemToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem listarBensToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setoresToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem gerirSetoresToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cadastrarBemToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem movimentaçõesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem novaMovimentaçãoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem históricoDeMovimentaçõesToolStripMenuItem;

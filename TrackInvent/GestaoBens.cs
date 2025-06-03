@@ -23,12 +23,10 @@ namespace TrackInvent
         {
             panel1.Controls.Clear();
 
-
             int cardWidth = 120;
-            int cardHeight = 140;
+            int cardHeight = 180; // Aumenta para caber mais informações
             int margin = 10;
-
-            int columns = 5;
+            int columns = 6;
             if (columns < 1) columns = 1;
 
             for (int i = 0; i < dtBens.Rows.Count; i++)
@@ -36,6 +34,8 @@ namespace TrackInvent
                 DataRow row = dtBens.Rows[i];
                 string nome = row["Nome"].ToString();
                 string icon = row["Icon"]?.ToString() ?? "";
+                    string quantidade = row["Quantidade"].ToString();
+                string valor = row["Valor"].ToString();
 
                 int col = i % columns;
                 int rowIndex = i / columns;
@@ -43,32 +43,50 @@ namespace TrackInvent
                 int x = col * (cardWidth + margin);
                 int y = rowIndex * (cardHeight + margin);
 
-                // Criar botão com imagem
+                // Botão com imagem
                 Button btn = new Button();
                 btn.Width = cardWidth;
-                btn.Height = cardHeight - 30;
+                btn.Height = cardHeight-60;
                 btn.Location = new Point(0, 0);
                 btn.BackgroundImageLayout = ImageLayout.Zoom;
                 btn.FlatStyle = FlatStyle.Flat;
                 btn.FlatAppearance.BorderSize = 0;
                 btn.Font = new Font("Calibri", 24F, FontStyle.Regular);
                 btn.Text = icon;
+                btn.Tag = row["ID"];
+                btn.Click += BtnIcon_Click; 
 
-                // Label com o nome
-                Label lbl = new Label();
-                lbl.Text = nome;
-                lbl.Width = cardWidth;
-                lbl.Height = 30;
-                lbl.TextAlign = ContentAlignment.MiddleCenter;
-                lbl.Location = new Point(0, btn.Bottom + 2);
+                // Label nome
+                Label lblNome = new Label();
+                lblNome.Text = nome;
+                lblNome.Width = cardWidth;
+                lblNome.Height = 22;
+                lblNome.TextAlign = ContentAlignment.MiddleCenter;
+                lblNome.Location = new Point(0, btn.Bottom + 2);
+
+                // Label quantidade
+                Label lblQtd = new Label();
+                lblQtd.Text = "Qtd: " + quantidade;
+                lblQtd.Width = cardWidth;
+                lblQtd.Height = 18;
+                lblQtd.Location = new Point(0, lblNome.Bottom + 2);
+
+                // Label valor
+                Label lblValor = new Label();
+                lblValor.Text = "Valor: " + valor;
+                lblValor.Width = cardWidth;
+                lblValor.Height = 18;
+                lblValor.Location = new Point(0, lblQtd.Bottom + 2);
 
                 // Painel do card
                 Panel card = new Panel();
                 card.Width = cardWidth;
                 card.Height = cardHeight;
-                card.Location = new Point(x+10, y+ 80);
+                card.Location = new Point(x + 10, y + 80);
                 card.Controls.Add(btn);
-                card.Controls.Add(lbl);
+                card.Controls.Add(lblNome);
+                card.Controls.Add(lblQtd);
+                card.Controls.Add(lblValor);
                 card.BorderStyle = BorderStyle.FixedSingle;
 
                 panel1.Controls.Add(card);
@@ -80,7 +98,7 @@ namespace TrackInvent
             int bemID = (int)btn.Tag;
 
             // Exemplo: abrir formulário de detalhes
-            var formDetalhes = new cadastroBens();
+            var formDetalhes = new BemEditar(bemID);
             formDetalhes.ShowDialog();
 
             LoadBens(BLL.Bens.GetAll()); // Recarrega caso tenha havido alteração
@@ -90,6 +108,9 @@ namespace TrackInvent
         private TextBox txtPesquisa;
         private ComboBox cbCategoria, cbEstado, cbSetor;
         private bool isPlaceholderTxt = true;
+        private bool isPlaceholderCbEstado = true;
+        private bool isPlaceholderCbSetor = true;
+        private bool isPlaceholderCbCategoria = true;
         private void CarregarFiltros()
         {
             if (panelFiltros != null) return; // Já carregado
@@ -118,9 +139,9 @@ namespace TrackInvent
             {
                 if (string.IsNullOrWhiteSpace(txtPesquisa.Text))
                 {
+                    isPlaceholderTxt = true;
                     txtPesquisa.Text = "Pesquisar nome...";
                     txtPesquisa.ForeColor = Color.Gray;
-                    isPlaceholderTxt = true;
                 }
             };
               txtPesquisa.TextChanged += (s, e) =>
@@ -134,20 +155,54 @@ namespace TrackInvent
 
             // ComboBox Categoria
             cbCategoria = CriarComboComVazio(BLL.Categorias.GetAll(), "Nome", new Point(180, 15),"Categoria");
-            cbCategoria.SelectedIndexChanged += (s, e) => AtualizarFiltros();
-            cbCategoria.SelectedIndexChanged += (s, e) => AtualizarFiltros();
+            cbCategoria.SelectedIndexChanged += (s, e) => {
+                if (cbCategoria.SelectedIndex == 0) // Se for o placeholder
+                {
+                    isPlaceholderCbCategoria = true;
+                }
+                else
+                {
+                    isPlaceholderCbCategoria = false;
+                }
+                AtualizarFiltros(); };
             panelFiltros.Controls.Add(cbCategoria);
 
             // ComboBox Estado
             cbEstado = CriarComboComVazio(BLL.Estados.GetAll(), "Nome", new Point(330, 15),"Estado");
-            cbEstado.SelectedIndexChanged += (s, e) => AtualizarFiltros();
+            cbEstado.SelectedIndexChanged += (s, e) =>
+            {
+                if (cbEstado.SelectedIndex == 0) // Se for o placeholder
+                {
+                    isPlaceholderCbEstado = true;
+                }
+                else
+                {
+                    isPlaceholderCbEstado = false;
+                }
+                AtualizarFiltros();
+            }; 
             panelFiltros.Controls.Add(cbEstado);
 
             // ComboBox Setor
             cbSetor = CriarComboComVazio(BLL.Setores.GetAll(), "Nome", new Point(480, 15), "Setor");
-            cbSetor.SelectedIndexChanged += (s, e) => AtualizarFiltros();
+            cbSetor.SelectedIndexChanged += (s, e) => {
+                if (cbSetor.SelectedIndex == 0) // Se for o placeholder
+                {
+                    isPlaceholderCbSetor = true;
+                }
+                else
+                {
+                    isPlaceholderCbSetor = false;
+                }
+                AtualizarFiltros(); };
             panelFiltros.Controls.Add(cbSetor);
         }
+
+        private void GestaoBens_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private ComboBox CriarComboComVazio(DataTable dt, string display, Point pos, string sender)
         {
             if (!dt.Columns.Contains(display))
@@ -202,17 +257,12 @@ namespace TrackInvent
         private void AtualizarFiltros()
         {
             string pesquisa = isPlaceholderTxt ? "" : txtPesquisa.Text.Trim();
-            int? categoriaId = null;
-            if (!string.IsNullOrWhiteSpace(cbCategoria.SelectedValue?.ToString()))
-                categoriaId = BLL.Categorias.GetIDByNome(cbCategoria.SelectedValue.ToString());
+            int? categoriaId = isPlaceholderCbCategoria ? (int?)null : BLL.Categorias.GetIDByNome(cbCategoria.Text);
+ ;
 
-            int? estadoId = null;
-            if (!string.IsNullOrWhiteSpace(cbEstado.SelectedValue?.ToString()))
-                estadoId = BLL.Estados.GetIDByNome(cbEstado.SelectedValue.ToString());
-
-            int? setorId = null;
-            if (!string.IsNullOrWhiteSpace(cbSetor.SelectedValue?.ToString()))
-                setorId = BLL.Setores.GetIDByNome(cbSetor.SelectedValue.ToString());
+            int? estadoId = isPlaceholderCbEstado ? (int?)null : BLL.Estados.GetIDByNome(cbEstado.Text);
+ ;
+            int? setorId = isPlaceholderCbSetor ? (int?)null : BLL.Setores.GetIDByNome(cbSetor.Text); ;
 
 
             // Chamada ao BLL com filtros

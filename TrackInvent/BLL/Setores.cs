@@ -77,5 +77,14 @@ namespace TrackInvent.BLL
             int count = (int)dal.executarScalar("SELECT COUNT(*) FROM Bens_Patrimoniais WHERE Localizacao_Id = @id", param);
             return count > 0;
         }
+        public static string GetNomeById(int id)
+        {
+            DAL dal = new DAL();
+            SqlParameter[] sqlParams = {
+                new SqlParameter("@id", id)
+            };
+            object result = dal.executarScalar("SELECT Nome FROM Setores WHERE ID = @id", sqlParams);
+            return result != null && result != DBNull.Value ? result.ToString() : null;
+        }
     }
 }

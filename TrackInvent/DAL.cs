@@ -10,7 +10,7 @@ namespace DataAccessLayer
 
         public DAL()
         {
-            _SqlConn = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\david\source\repos\TrackInvent\TrackInvent\Database1.mdf;Integrated Security=True;Connect Timeout=30");
+            _SqlConn = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\admin\Documents\GitHub\PtTrackInvent\TrackInvent\Database1.mdf;Integrated Security=True;Connect Timeout=30");
         }
 
         private void abrirLigacao()
